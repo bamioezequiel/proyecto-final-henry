@@ -1,6 +1,6 @@
 .Footer_Container {
-  background-color: #353b3b;
-  color: #fafafa;
+  background-color: #a1d6cfda;
+  color: #484b4bd5;
   height: 200px;
   /* position: absolute; */
   bottom: 0px;
@@ -65,4 +65,5 @@
   /* color: #353b3b; */
   text-decoration: none;
   font-size: 20px;
+  color: #484b4bd5;
 }
