@@ -10,8 +10,8 @@ export default function Footer() {
         <div className={styles.Footer_Container}>
             <div className={styles.div}>
                 <h2 className={styles.h2}>Sobre nosotros</h2>
-                <a  className={styles.a} href="http://localhost:3000/"><h3 className={styles.hh3}>¿Que es lalala?</h3></a>
-                <a className={styles.a} href="http://localhost:3000/"><h3 className={styles.hh3}>Terminos y condiciones generales</h3></a>
+                <a  className={styles.a} href="http://localhost:3000/lalala"><h3 className={styles.hh3}>¿Que es lalala?</h3></a>
+                <a className={styles.a} href="http://localhost:3000/terminos"><h3 className={styles.hh3}>Terminos y condiciones generales</h3></a>
             </div>
             <div className={styles.div}>
                 <h2 className={styles.h2}>Contactanos</h2>

@@ -8,6 +8,8 @@ import Search from "./components/Search/Search";
 import Favorites from "./components/Favorites/Favorites";
 import CreatePackage from "./components/Dashboard/CreatePackage";
 import CreateActivity from "./components/Dashboard/CreateActivity";
+import QueEsLalala from "./components/Footer/QueEsLalala.jsx";
+import Terminos from "./components/Footer/Terminos.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
@@ -30,6 +32,8 @@ function App() {
         <Route path="/checkout" element={<Home />} />
         <Route path="/faq" element={<Home />} />
         <Route path="/contact" element={<Home />} />
+        <Route path="/lalala" element={<QueEsLalala />} />
+        <Route path="/terminos" element={<Terminos />} />
         <Route path="*" element={<Home />} />
       </Routes>
     </BrowserRouter>
