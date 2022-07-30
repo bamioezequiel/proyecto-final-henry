@@ -43,6 +43,7 @@ export default function FilterSearch({ destinations }) {
       if(fromDate === '' && untilDate === '') {
         alert('Los calendario no pueden estar vacios');
       } else {
+        dispatch(filterPackagesByDestination());
         dispatch(filterPackagesByDate([fromDate, untilDate]));
         navigate("/search");
       }

@@ -155,16 +155,23 @@ const rootReducer = (state = initialState, action) => {
       };
 
     case FILTER_BY_DESTINATION:
+      const allPackages = state.allPackages;
+      let aux = [];
+      action.payload === "all"
+        ? allPackages.forEach((e) => aux.push(e))
+        : allPackages.filter((p) =>
+            p.destinations.forEach((el) => {
+              el.name === action.payload && aux.push(p);
+            })
+          );
       return {
         ...state,
-        filteredPackages: action.payload,
+        filteredPackages: aux,
       };
     case FILTER_PACKAGES_BY_DATE:
       let filteredPackagesDate = [];
       state.filteredPackages.forEach((p) =>
-        action.payload.forEach(
-          (f) => p.id === f.id && filteredPackagesDate.push(f)
-        )
+        action.payload.forEach((f) => p.id === f.id && filteredPackagesDate.push(f))
       );
       console.log(filteredPackagesDate);
       return {
