@@ -15,7 +15,10 @@ import validationPackage from "./validationPackage.js";
 import ModalActividades from "./ModalActividades";
 import ModalDestinos from "./ModalDestinos";
 
-export default function CreatePackage({ showCreatePackage, setShowCreatePackage }) {
+export default function CreatePackage({
+  showCreatePackage,
+  setShowCreatePackage,
+}) {
   const dispatch = useDispatch();
   const [aux, setAux] = useState(false);
   useEffect(() => {
@@ -62,8 +65,8 @@ export default function CreatePackage({ showCreatePackage, setShowCreatePackage 
     // region: "",
     seasson: "",
     type: "",
-    featured: false,
-    available: true,
+    featured: "false",
+    available: "true",
     on_sale: 0,
   });
 
@@ -245,9 +248,10 @@ export default function CreatePackage({ showCreatePackage, setShowCreatePackage 
   const handleShowDestinos = () => setShowDestinos(true);
 
   return (
-    !showCreatePackage ? null
-    :
+    // !showCreatePackage ? null
+    // :
     <div>
+      <Dashboard />
       <div className={style.create_container}>
         <h2>Crear un Paquete</h2>
         <hr className={style.create_line} />
@@ -357,9 +361,7 @@ export default function CreatePackage({ showCreatePackage, setShowCreatePackage 
             <select
               name="available"
               onChange={(e) => handleSelect(e)}
-              className={
-                error.available ? style.error_create_input : style.create_input
-              }
+              className={style.create_input}
             >
               <option selected={true} value="true">
                 Si

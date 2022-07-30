@@ -33,7 +33,6 @@ export default function Card({ name, image, description, price, id }) {
     dispatch(getFavoritesLocalStorage());
   }
 
-
   return (
     <div className={s.card}>
       <img src={image} alt="img not found" width="300vw" height="250vw" />

@@ -11,11 +11,20 @@ import {
   getAllActivities,
   getAllPackage,
   getDestinationsWithPackages,
+  createUser,
 } from "../../redux/actions/index";
 import BacktoTop from "../BacktoTop/BacktoTop";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Home() {
   const dispatch = useDispatch();
+  const {
+    user,
+    isAuthenticated,
+    loginWithPopup,
+    logout,
+    getAccessTokenSilently,
+  } = useAuth0();
 
   const [loading, setLoading] = useState(true);
   const allDestinations = useSelector(
@@ -31,6 +40,10 @@ export default function Home() {
     await dispatch(getDestinationsWithPackages());
     await dispatch(getOnSale());
     await dispatch(getAllActivities());
+    // if (isAuthenticated) {
+    //   const token = await dispatch(createUser(token));
+    //   console.log(token);
+    // }
     setLoading(false);
   }, [dispatch]);
 
