@@ -1,14 +1,14 @@
 import { Package } from '../models/Packages.js';
 import { Destination } from '../models/Destinations.js';
 import { Activity } from '../models/Activities.js';
-// import { Classification } from '../models/Classification.js';
+import { User } from '../models/Users.js';
 import sequelize, { Op } from 'sequelize';
 
 
 export const getPackages = async (req, res) => {
     const { limitRender } = req.params;
     const { page, priceSort, durationSort, type, region, destination, dateMin, dateMax, available } = req.query;
-    const { priceFilterMin, priceFilterMax/* , dateMin, dateMax */, durationFilterMin, durationFilterMax } = req.body;
+    const { priceFilterMin, priceFilterMax, durationFilterMin, durationFilterMax } = req.body;
 
     try {
         const limitRend = parseInt(limitRender) || 12,
@@ -33,8 +33,14 @@ export const getPackages = async (req, res) => {
                         attributes: [],
                     },
                 },
+                {
+                    model: User,
+                    attributes: ['id'],
+                    through: {
+                        attributes: ['rating']
+                    }
+                }
             ],
-            // ['where']: sequelize.where(sequelize.col('destinations', sequelize.col('name')), destination),
             where: {
 				available: available === 'true' ? 
                     true : 
@@ -49,28 +55,6 @@ export const getPackages = async (req, res) => {
                 type: type ? type : {
                     [Op.not]: null,
                 },
-                // region: region ? region : {
-                //     [Op.not]: null,
-                // },
-                // include: {
-                //     model: Destination,
-                //     where: {
-                //         name: destination,
-                //     },
-                // },
-                // destinations: destination ? [
-                //     sequelize.literal(`(
-                //         SELECT * 
-                //         FROM ${Package} AS p
-                //         INNER JOIN ${Destination} AS d ON p.id = d.id 
-                //         WHERE
-                //             d.name = ${destination}
-                //     )`)
-                // ] : {
-                //     [Op.not]: null,
-                // },
-                // [destination? 'destinations' : ""]: sequelize.fn(),
-                // [destination? 'destinations' : ""]: sequelize.where(sequelize.col('name')),
                 price: (priceFilterMin && priceFilterMax) ? {
                     [Op.and]: {
                         [Op.gte]: priceFilterMin,
@@ -87,43 +71,16 @@ export const getPackages = async (req, res) => {
                 } : {
                     [Op.not]: null,
                 },
-                // duration: (durationFilterMin && durationFilterMax)? {
-                //     [Op.and]: {
-                //         [Op.gte]: durationFilterMin,
-                //         [Op.lte]: durationFilterMax,
-                //     },
-                // } : {
-                //     [Op.not]: null,
-                // },
 			},
-			[(priceSort/*  || durationSort */) && 'order']: [
+			[priceSort && 'order']: [
 				priceS === 'asc' ? 
                 ['price', 'ASC'] : 
                     priceS === 'desc' ? 
                     ['price', 'DESC'] : 
-                        // durationS === 'asc' ? 
-                        // ['duration', 'ASC'] : 
-                        //     durationS === 'desc' ? 
-                        //     ['duration', 'DESC'] : 
-                                null,
-                // durationS === 'asc' ? 
-                // ['duration', 'ASC'] : 
-                //     durationS === 'desc' ? 
-                //     ['duration', 'DESC'] : 
-                //         null,
+                        null,
 			],
             offset: limitRend * (pag - 1),
 			limit: limitRend,
-            // attributes: [
-            //     'id',
-            //     'name',
-            //     'main_image',
-            //     'price',
-            //     'seasson',
-            //     'type',
-            //     'featured',
-            //     'on_sale',
-            // ],
 		});
 
         let packagesResult = packages.filter(p => {
@@ -147,9 +104,17 @@ export const getPackages = async (req, res) => {
                         order :
                         true;
                 }) : 
-            packagesResult;
-
-		res.status(200).json(packagesResult);
+                packagesResult;
+        const copyPackagesResult = JSON.parse(JSON.stringify(packagesResult))
+        copyPackagesResult.forEach(e => {
+            let pRating = 0;
+            e.users.length &&  e.users.forEach(u => {
+                pRating += u.ratingAndFavourite.rating
+            })
+            pRating? e.rating = Math.ceil(pRating / e.users.length) : e.rating = pRating
+            delete e.users
+        })
+		res.status(200).json(copyPackagesResult);
 	} catch (error) {
 		return res.status(404).json({ message: error.message });
 	};
