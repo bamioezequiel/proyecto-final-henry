@@ -316,7 +316,7 @@ export const createCart = async (req, res) => {
 
 export const updateCart = async (req, res) => {
 	const { cartId } = req.params;
-	const /* cartPackages */ { packageId, activitiesId, quantity, total_package } = req.body;
+	const /* cartPackages */ { packageId, activitiesId, quantity,  total_package } = req.body;
 
 	try {
 		const oldCart = await Order.findByPk(cartId);
@@ -403,7 +403,7 @@ export const updateCart = async (req, res) => {
 		if (existPackageInCart) return res.status(400).json({ message: 'The package exist into the user\'s cart' });
 
 		await Order.update({
-			total_order: oldCart.total_order + total_package,
+			total_order: parseFloat(oldCart.total_order) + total_package,
 		}, {
 			where: {
 				id: cartId,
@@ -481,7 +481,7 @@ export const patchStatusCart = async (req, res) => {
 
 export const deleteCart = async (req, res) => {
 	const cartId = parseInt(req.params.cartId);
-	const packageId = parseInt(req.query.packageId)
+	const packageId = parseInt(req.query.packageId);
 
 	try {
 		const cart = await Order.findByPk(cartId, {
@@ -502,6 +502,7 @@ export const deleteCart = async (req, res) => {
 		// });
 
 		const paquete = await Package.findByPk(packageId);
+
 		const orderItemId = cart.packages[0].order_item.id;
 
 		await OrderItem.destroy({
@@ -510,6 +511,14 @@ export const deleteCart = async (req, res) => {
 			},
 		});
 
+		await Order.update({
+			total_order: parseFloat(cart.total_order) - (paquete.price * cart.packages[0].order_item.quantity),
+		}, {
+			where: {
+				id: cart.id,
+			},
+		});
+		
 		cart.removePackage(paquete)
 
 		return res.status(200).json({ message: "Cart deleted successfully" }); 
