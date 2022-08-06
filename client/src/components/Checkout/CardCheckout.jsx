@@ -10,7 +10,7 @@ export default function Card({ name, image, qty, price, total, id, activities })
     const dispatch = useDispatch();
     const handlepay = async (e) => {
         e.preventDefault();
-        console.log(user)
+        // console.log(user)
         const cart = {items: [
             {id: 1,quantity:2 },
             {id: 2, quantity: 1}

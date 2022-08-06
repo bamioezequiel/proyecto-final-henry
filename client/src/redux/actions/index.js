@@ -204,16 +204,16 @@ export const Payment = (payload, token) => {
   return async function (dispatch){
     try {
       console.log(payload)
-      const res = await axios.post('/payment',
-      {
+      const res = await axios.post('/payment', {
         headers: {
           authorization: `Bearer ${token}`,
         },
-      body: payload})
-        if (res){
-          console.log(res.data.url) 
-          window.location = res.data.url
-        }
+        body: payload
+      })
+      if (res){
+        // console.log(res.data.url) 
+        window.location = res.data.url
+      }
     } catch (error) {
       console.log(error)
     }

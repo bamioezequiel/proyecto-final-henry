@@ -2,23 +2,26 @@ import React, { useEffect, useState } from "react";
 import {useDispatch, useSelector } from "react-redux";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Payment } from "../../redux/actions";
-export default function(){
-    const user = useSelector( (state) => state.user );
+
+
+export default function Checkout2(){
+    const user = useSelector((state) => state.user);
+    const cart = useSelector((state) => state.cart);
     const { getAccessTokenSilently} = useAuth0();
     const dispatch = useDispatch();
 
     const handlepay = async (e) => {
         e.preventDefault();
-        console.log(user)
-        const cart = {items: [
-            {id: 1,quantity:2 },
-            {id: 2, quantity: 1}
-        ]}
+        // console.log(user)
+        // const cart = {items: [
+        //     {id: 1,quantity:2 },
+        //     {id: 2, quantity: 1}
+        // ]}
         const token = await getAccessTokenSilently()
         dispatch(Payment(cart, token))
-      };
+        };
     return(
-       <div>
+        <div>
             <h1>Checkout</h1>
             <div>
                 <h3>Detalles del Pasajero</h3>
