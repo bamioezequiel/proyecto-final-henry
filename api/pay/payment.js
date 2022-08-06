@@ -12,7 +12,6 @@ export const PaymentCreate = async (req, res) => {
     try {
         const userInfo = await getUserInfoByToken(req.body);
         const user = await findOneUserFromDataBase(userInfo.email);
-        console.log(userInfo.email, user, '\n'/* , cart */);
         const cart = user?.orders.find(order => order.status === 'shopping cart');
         const cartId = cart?.id;
         //FUNCION PARA FORMATEAR EL CARRITO ENVIADO POR REQ DARIA UN RESULTADO COMO EL REPRESENTADO EN ITEMSCART    
