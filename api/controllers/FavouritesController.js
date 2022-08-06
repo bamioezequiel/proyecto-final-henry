@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Order } from '../models/Orders.js';
 import { Package } from "../models/Packages.js";
 import { User } from "../models/Users.js";
 
@@ -24,7 +25,10 @@ export const findOneUserFromDataBase = async (data) => {
 		const user = await User.findOne({
 			where:{
 				email: data,
-			}
+			},
+			include: {
+				model: Order,
+			},
 		})
 		return user;
 	} catch (error) {
@@ -35,8 +39,7 @@ export const findOneUserFromDataBase = async (data) => {
 export const addFavourite = async (req, res) => {
   try {
 		const id = req.params.id
-		console.log(req)
-    const userInfo = await getUserInfoByToken(req);
+		const userInfo = await getUserInfoByToken(req);
 		const packages = await Package.findByPk(id)
 		const user = await findOneUserFromDataBase(userInfo.email)
 		user.addPackage(packages, { through: { favourite: true } })		

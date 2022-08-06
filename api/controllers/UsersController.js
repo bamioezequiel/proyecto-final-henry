@@ -179,7 +179,7 @@ export const createUser = async (req, res) => {
 	//console.log(usuarioDB[0])
 	res.status(200).json(usuarioDB[0]);
 	} catch (error) {
-		console.log(error)
+		// console.log(error)
 		return res.status(400).json({ message: error.message });
 	}
 }

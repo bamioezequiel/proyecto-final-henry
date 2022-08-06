@@ -133,6 +133,20 @@ export const getOrderDetail = async (req, res) => {
 	};
 };
 
+export const statusOrderFunction = async (orderId, status) => {
+	await Order.update({
+		status: status,
+	}, {
+		where: {
+			[Op.and]: [{
+				id: orderId,
+			}, {
+				status: 'pending',
+			}],
+		},
+	});
+};
+
 export const patchStatusOrder = async (req, res) => {
 	const orderId = parseInt(req.params.orderId);
 	const { newStatus } = req.query;
@@ -145,21 +159,9 @@ export const patchStatusOrder = async (req, res) => {
 		if (existOrder.status === 'shopping cart') return res.status(400).json({ message: "The id entered is not from a order" });
 		if (existOrder.status !== 'pending') return res.status(400).json({ message: "The id entered is not from a order pending" });
 
-		const order = await Order.update({
-			status: status,
-		}, {
-			where: {
-				[Op.and]: [{
-					id: orderId,
-				}, {
-					status: 'pending',
-				}],
-			},
-		});
+		await statusOrderFunction(orderId, status);
 
-		order ? 
-		res.status(200).json({ message: `Order status changed to \'${status}\' successfully` }) : 
-		res.status(404).json({ message: "Order not found" });
+		res.status(200).json({ message: `Order status changed to \'${status}\' successfully` });
 	} catch (error) {
 		return res.status(400).json({ message: error.message });
 	};
@@ -396,6 +398,16 @@ export const updateCart = async (req, res) => {
 	};
 };
 
+export const statusCartFunction = async (cartId) => {
+	await Order.update({
+		status: 'pending',
+	}, {
+		where: {
+			id: cartId,
+		},
+	});
+};
+
 export const patchStatusCart = async (req, res) => {
 	const cartId = parseInt(req.params.cartId);
 
@@ -404,13 +416,7 @@ export const patchStatusCart = async (req, res) => {
 		if (!cart) return res.status(404).json({ message: "Cart not found" });
 		if (cart.status !== 'shopping cart') return res.status(400).json({ message: "The id entered is not from a cart" });
 
-		await Order.update({
-			status: 'pending',
-		}, {
-			where: {
-				id: cartId,
-			},
-		});
+		await statusCartFunction(cartId);
 
 		return res.status(200).json({ message: "Cart status changed to \'pending\' successfully" });
 	} catch (error) {
