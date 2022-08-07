@@ -31,7 +31,7 @@ export const getOrders = async (req, res) => {
 	
 	try {
 		const page = parseInt(req.query.page) || 1;
-		const limit = parseInt(req.query.limit) || 10;
+		const limit = parseInt(req.query.limit) || 100000;
 		const offset = limit * (page - 1);
 		const totalRows = await Order.count({
 			where: filter,
@@ -323,7 +323,7 @@ export const createCart = async (req, res) => {
 
 export const updateCart = async (req, res) => {
 	const { cartId } = req.params;
-	const /* cartPackages */ { packageId, activitiesId, quantity,  total_package } = req.body;
+	const /* cartPackages */ { packageId, activitiesId, quantity, total_package } = req.body;
 
 	try {
 		const oldCart = await Order.findByPk(cartId);
@@ -526,7 +526,7 @@ export const deleteCart = async (req, res) => {
             },
         });
 
-        await cart.removePackage(paquete)
+        await cart.removePackage(paquete);
 
 		return res.status(200).json({ message: "Cart deleted successfully" }); 
 	} catch (error) {

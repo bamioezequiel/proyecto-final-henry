@@ -37,16 +37,16 @@ export const findOneUserFromDataBase = async (data) => {
 }
 //------------------------------------------------------
 export const addFavourite = async (req, res) => {
-  try {
+	try {
 		const id = req.params.id
 		const userInfo = await getUserInfoByToken(req);
 		const packages = await Package.findByPk(id)
 		const user = await findOneUserFromDataBase(userInfo.email)
 		user.addPackage(packages, { through: { favourite: true } })		
 		res.status(200).send('Added to favourite successfully')
-  } catch (e) {
+	} catch (e) {
     res.status(400).send({ data: e.message });
-  }
+	}
 }
 
 export const getFavourites = async (req, res) => {
