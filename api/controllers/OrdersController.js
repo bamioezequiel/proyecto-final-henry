@@ -495,31 +495,31 @@ export const deleteCart = async (req, res) => {
 		if (!cart) return res.status(404).json({ message: "Cart not found" });
 		if (cart.status !== 'shopping cart') return res.status(400).json({ message: "The id entered is not from a cart" });
 
-		// await Order.destroy({
-		// 	where: {
-		// 		id: cartId,
-		// 	},
-		// });
-
 		const paquete = await Package.findByPk(packageId);
 
-		const orderItemId = cart.packages[0].order_item.id;
+        const orderItemId = cart.packages[0].order_item.id;
 
-		await OrderItem.destroy({
-			where: {
-				id: orderItemId,
-			},
-		});
+        const orderItem = await OrderItem.findByPk(orderItemId, {
+            include: {
+                model: Activity,
+            },
+        });
 
-		await Order.update({
-			total_order: parseFloat(cart.total_order) - (paquete.price * cart.packages[0].order_item.quantity),
-		}, {
-			where: {
-				id: cart.id,
-			},
-		});
-		
-		cart.removePackage(paquete)
+        await Order.update({
+            total_order: parseFloat(cart.total_order) - cart.packages[0].order_item.quantity * (paquete.price + orderItem.activities.reduce((sum, act) => sum + act.price, 0)),
+        }, {
+            where: {
+                id: cart.id,
+            },
+        });
+
+        await OrderItem.destroy({
+            where: {
+                id: orderItemId,
+            },
+        });
+
+        await cart.removePackage(paquete)
 
 		return res.status(200).json({ message: "Cart deleted successfully" }); 
 	} catch (error) {

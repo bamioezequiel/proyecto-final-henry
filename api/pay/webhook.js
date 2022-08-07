@@ -9,7 +9,7 @@ const stripe = Stripe(/* 'sk_test_51LSoUXFrlpRCY5YH7F7s7KDDAOsF4LAeXJyAJrHjUUSOb
 export const PaymentResponse = async (req, res)=>{
   const sig = req.headers['stripe-signature'];
   const id = req.body.client_reference_id;
-  console.log({CARRITO_ID: id});
+//   console.log({CARRITO_ID: id});
   let data;
   let eventType;
   try {
